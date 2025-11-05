@@ -81,7 +81,8 @@ Estabelecimentos inescrupulosos podem usar metanol para reduzir custos, colocand
 - Reviews e denúncias de usuários
 
 ### APIs Externas
-- **CNPJá API** - Dados cadastrais de empresas
+- **BrasilAPI** - Dados cadastrais de empresas (API pública brasileira)
+- **ReceitaWS** - Fallback para consulta de CNPJ
 - **ViaCEP** - Validação de endereços
 - **Geolocation API** - Localização do usuário
 
@@ -229,25 +230,42 @@ http-server -p 8000
 
 ## 🔌 APIs Utilizadas
 
-### CNPJá API
+### Sistema de Fallback em Cascata
 
-**URL:** `https://api.cnpja.com/office/{CNPJ}`
+A aplicação tenta múltiplas APIs na seguinte ordem:
+
+1. **Cache Local** (primeiro)
+2. **BrasilAPI** (preferencial)
+3. **ReceitaWS** (fallback)
+
+### BrasilAPI
+
+**URL:** `https://brasilapi.com.br/api/cnpj/v1/{CNPJ}`
 
 **Características:**
-- Gratuita (com limites)
-- Não requer autenticação
-- Retorna dados cadastrais completos
-- CORS habilitado
+- ✅ 100% Gratuita e pública
+- ✅ Não requer autenticação
+- ✅ Dados oficiais da Receita Federal
+- ✅ CORS habilitado
+- ✅ Alta disponibilidade
 
 **Exemplo de uso:**
 ```javascript
-const response = await fetch('https://api.cnpja.com/office/12345678000190');
+const response = await fetch('https://brasilapi.com.br/api/cnpj/v1/42143596000129');
 const dados = await response.json();
 ```
 
-**Limite:** ~3 requisições por minuto
+### ReceitaWS (Fallback)
 
-**Fallback:** Em caso de erro de CORS ou limite excedido, a aplicação usa cache local e permite entrada manual de dados.
+**URL:** `https://receitaws.com.br/v1/cnpj/{CNPJ}`
+
+**Características:**
+- ✅ Gratuita (com limites)
+- ✅ Não requer autenticação
+- ✅ Dados da Receita Federal
+- ⚠️ Limite de 3 requisições por minuto
+
+**Fallback Final:** Em caso de erro em todas as APIs, a aplicação usa cache local.
 
 ### ViaCEP API
 
@@ -347,7 +365,8 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ## 🙏 Agradecimentos
 
-- **CNPJá** - Por fornecer API gratuita de dados cadastrais
+- **BrasilAPI** - Por fornecer API pública e gratuita de dados brasileiros
+- **ReceitaWS** - Por disponibilizar API de consulta CNPJ
 - **ViaCEP** - Por fornecer API gratuita de CEPs
 - **Font Awesome** - Por disponibilizar ícones gratuitamente
 - **Vercel** - Por hospedagem gratuita e confiável

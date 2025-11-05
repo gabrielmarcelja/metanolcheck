@@ -7,6 +7,8 @@ const API = {
   // URLs das APIs
   URLS: {
     CNPJA: 'https://api.cnpja.com/office',
+    RECEITAWS: 'https://receitaws.com.br/v1/cnpj',
+    BRASILAPI: 'https://brasilapi.com.br/api/cnpj/v1',
     VIACEP: 'https://viacep.com.br/ws'
   },
 
@@ -42,7 +44,7 @@ const API = {
   // ========== API CNPJá ==========
 
   /**
-   * Consulta dados de CNPJ na API CNPJá
+   * Consulta dados de CNPJ - Tenta múltiplas APIs em cascata
    * @param {string} cnpj - CNPJ a consultar (com ou sem formatação)
    * @returns {Promise<Object>} - Dados do estabelecimento
    */
@@ -67,38 +69,24 @@ const API = {
         };
       }
 
-      // Faz requisição à API
-      const url = `${this.URLS.CNPJA}/${cnpjLimpo}`;
-      const response = await this.fetchComTimeout(url);
+      // Tenta BrasilAPI primeiro (gratuita, sem restrições)
+      console.log('Tentando BrasilAPI...');
+      let resultado = await this.tentarBrasilAPI(cnpjLimpo);
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('CNPJ não encontrado');
-        } else if (response.status === 429) {
-          throw new Error('Limite de requisições excedido. Tente novamente mais tarde.');
-        } else {
-          throw new Error(`Erro ao consultar CNPJ: ${response.status}`);
-        }
+      if (resultado.sucesso) {
+        return resultado;
       }
 
-      const dados = await response.json();
+      // Se falhou, tenta ReceitaWS
+      console.log('BrasilAPI falhou, tentando ReceitaWS...');
+      resultado = await this.tentarReceitaWS(cnpjLimpo);
 
-      // Salva no cache
-      Storage.salvarCacheCNPJ(cnpjLimpo, dados);
+      if (resultado.sucesso) {
+        return resultado;
+      }
 
-      // Adiciona ao histórico
-      Storage.adicionarHistorico({
-        tipo: 'cnpj',
-        cnpj: cnpjLimpo,
-        nomeFantasia: dados.alias || dados.company?.name || 'Sem nome',
-        sucesso: true
-      });
-
-      return {
-        sucesso: true,
-        dados: dados,
-        origem: 'api'
-      };
+      // Se tudo falhou, retorna erro com sugestão
+      throw new Error('Não foi possível consultar o CNPJ nas APIs disponíveis. Os dados podem estar temporariamente indisponíveis.');
 
     } catch (error) {
       console.error('Erro ao consultar CNPJ:', error);
@@ -116,6 +104,166 @@ const API = {
         erro: error.message
       };
     }
+  },
+
+  /**
+   * Tenta consultar na BrasilAPI
+   */
+  async tentarBrasilAPI(cnpj) {
+    try {
+      const url = `${this.URLS.BRASILAPI}/${cnpj}`;
+      const response = await this.fetchComTimeout(url);
+
+      if (!response.ok) {
+        throw new Error(`BrasilAPI: ${response.status}`);
+      }
+
+      const dados = await response.json();
+
+      // Normaliza dados da BrasilAPI para nosso formato
+      const dadosNormalizados = this.normalizarBrasilAPI(dados);
+
+      // Salva no cache
+      Storage.salvarCacheCNPJ(cnpj, dadosNormalizados);
+
+      // Adiciona ao histórico
+      Storage.adicionarHistorico({
+        tipo: 'cnpj',
+        cnpj: cnpj,
+        nomeFantasia: dadosNormalizados.alias || 'Sem nome',
+        sucesso: true
+      });
+
+      return {
+        sucesso: true,
+        dados: dadosNormalizados,
+        origem: 'brasilapi'
+      };
+
+    } catch (error) {
+      console.error('Erro BrasilAPI:', error);
+      return { sucesso: false, erro: error.message };
+    }
+  },
+
+  /**
+   * Tenta consultar na ReceitaWS
+   */
+  async tentarReceitaWS(cnpj) {
+    try {
+      const url = `${this.URLS.RECEITAWS}/${cnpj}`;
+      const response = await this.fetchComTimeout(url);
+
+      if (!response.ok) {
+        throw new Error(`ReceitaWS: ${response.status}`);
+      }
+
+      const dados = await response.json();
+
+      if (dados.status === 'ERROR') {
+        throw new Error(dados.message || 'Erro ao consultar ReceitaWS');
+      }
+
+      // Normaliza dados da ReceitaWS para nosso formato
+      const dadosNormalizados = this.normalizarReceitaWS(dados);
+
+      // Salva no cache
+      Storage.salvarCacheCNPJ(cnpj, dadosNormalizados);
+
+      // Adiciona ao histórico
+      Storage.adicionarHistorico({
+        tipo: 'cnpj',
+        cnpj: cnpj,
+        nomeFantasia: dadosNormalizados.alias || 'Sem nome',
+        sucesso: true
+      });
+
+      return {
+        sucesso: true,
+        dados: dadosNormalizados,
+        origem: 'receitaws'
+      };
+
+    } catch (error) {
+      console.error('Erro ReceitaWS:', error);
+      return { sucesso: false, erro: error.message };
+    }
+  },
+
+  /**
+   * Normaliza dados da BrasilAPI para formato padrão
+   */
+  normalizarBrasilAPI(dados) {
+    return {
+      taxId: dados.cnpj,
+      alias: dados.nome_fantasia || dados.razao_social,
+      company: {
+        name: dados.razao_social,
+        equity: dados.capital_social
+      },
+      founded: dados.data_inicio_atividade,
+      status: {
+        text: dados.descricao_situacao_cadastral
+      },
+      address: {
+        street: dados.logradouro,
+        number: dados.numero,
+        details: dados.complemento,
+        district: dados.bairro,
+        city: dados.municipio,
+        state: dados.uf,
+        zip: dados.cep
+      },
+      mainActivity: {
+        code: dados.cnae_fiscal,
+        text: dados.cnae_fiscal_descricao
+      },
+      phones: dados.ddd_telefone_1 ? [{
+        area: dados.ddd_telefone_1.substring(0, 2),
+        number: dados.ddd_telefone_1.substring(2)
+      }] : [],
+      emails: dados.email ? [{
+        address: dados.email
+      }] : []
+    };
+  },
+
+  /**
+   * Normaliza dados da ReceitaWS para formato padrão
+   */
+  normalizarReceitaWS(dados) {
+    return {
+      taxId: dados.cnpj,
+      alias: dados.fantasia || dados.nome,
+      company: {
+        name: dados.nome,
+        equity: dados.capital_social ? parseFloat(dados.capital_social.replace(/[^\d,]/g, '').replace(',', '.')) : 0
+      },
+      founded: dados.abertura,
+      status: {
+        text: dados.situacao
+      },
+      address: {
+        street: dados.logradouro,
+        number: dados.numero,
+        details: dados.complemento,
+        district: dados.bairro,
+        city: dados.municipio,
+        state: dados.uf,
+        zip: dados.cep
+      },
+      mainActivity: {
+        code: dados.atividade_principal?.[0]?.code || '',
+        text: dados.atividade_principal?.[0]?.text || ''
+      },
+      phones: dados.telefone ? [{
+        area: dados.telefone.substring(0, 2),
+        number: dados.telefone.substring(2)
+      }] : [],
+      emails: dados.email ? [{
+        address: dados.email
+      }] : []
+    };
   },
 
   /**
