@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Resultado da verificação de segurança do estabelecimento">
+  <title>Resultado da Verificação - MetanolCheck</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <i class="fas fa-shield-alt"></i>
+          MetanolCheck
+        </a>
+        <button class="menu-toggle" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+        <nav class="nav">
+          <a href="index.html" class="nav-link">Início</a>
+          <a href="educacao.html" class="nav-link">Educação</a>
+          <a href="denuncia.html" class="nav-link">Denunciar</a>
+          <a href="sobre.html" class="nav-link">Sobre</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container" style="margin-top: 32px; margin-bottom: 32px;">
+
+    <!-- Loading State -->
+    <div id="loadingState" class="card text-center">
+      <div class="loading" style="margin: 48px auto;"></div>
+      <p>Consultando dados do estabelecimento...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="hidden">
+      <div class="alert alert-danger">
+        <h3><i class="fas fa-exclamation-circle"></i> Erro ao Consultar CNPJ</h3>
+        <p id="errorMessage"></p>
+        <a href="index.html" class="btn btn-primary mt-2">
+          <i class="fas fa-arrow-left"></i> Voltar para Busca
+        </a>
+      </div>
+    </div>
+
+    <!-- Result Content -->
+    <div id="resultContent" class="hidden">
+
+      <!-- Score de Confiança -->
+      <div class="score-container" id="scoreContainer">
+        <div class="score-circle" id="scoreCircle">
+          <span id="scoreValue">0</span>
+        </div>
+        <h2 class="score-label" id="scoreLabel">Carregando...</h2>
+        <p id="scoreRecomendacao"></p>
+        <div class="flex gap-2 justify-center flex-wrap mt-2">
+          <button id="btnCompartilhar" class="btn btn-secondary">
+            <i class="fas fa-share-alt"></i> Compartilhar
+          </button>
+          <button id="btnAvaliar" class="btn btn-primary">
+            <i class="fas fa-star"></i> Avaliar Este Local
+          </button>
+        </div>
+      </div>
+
+      <!-- Dados Cadastrais -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-building"></i> Dados Cadastrais</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div>
+              <h5>Razão Social</h5>
+              <p id="razaoSocial">-</p>
+            </div>
+            <div>
+              <h5>Nome Fantasia</h5>
+              <p id="nomeFantasia">-</p>
+            </div>
+            <div>
+              <h5>CNPJ</h5>
+              <p id="cnpj">-</p>
+            </div>
+            <div>
+              <h5>Situação Cadastral</h5>
+              <p id="situacao">-</p>
+            </div>
+            <div>
+              <h5>Data de Abertura</h5>
+              <p id="dataAbertura">-</p>
+            </div>
+            <div>
+              <h5>Tempo de Funcionamento</h5>
+              <p id="tempoFuncionamento">-</p>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <h5>Atividade Principal (CNAE)</h5>
+            <p id="atividadePrincipal">-</p>
+          </div>
+
+          <div class="mt-3">
+            <h5><i class="fas fa-map-marker-alt"></i> Endereço</h5>
+            <p id="endereco">-</p>
+          </div>
+
+          <div class="mt-3" id="contatoSection" style="display: none;">
+            <h5><i class="fas fa-phone"></i> Contato</h5>
+            <p id="contato"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Análise de Risco -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-chart-line"></i> Análise de Risco</h3>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div>
+              <h5>Sinais Positivos</h5>
+              <ul class="signals-list" id="sinaisPositivos">
+                <li>Carregando...</li>
+              </ul>
+            </div>
+            <div>
+              <h5>Sinais de Alerta</h5>
+              <ul class="signals-list" id="sinaisAlerta">
+                <li>Carregando...</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avaliações de Usuários -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-users"></i> Avaliações de Usuários</h3>
+        </div>
+        <div class="card-body">
+          <div id="statsReviews" class="mb-3"></div>
+          <div id="listaReviews"></div>
+          <button id="btnNovaAvaliacao" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Adicionar Sua Avaliação
+          </button>
+        </div>
+      </div>
+
+      <!-- Denúncias -->
+      <div class="card" id="cardDenuncias" style="display: none;">
+        <div class="card-header" style="background-color: #fee2e2;">
+          <h3><i class="fas fa-exclamation-triangle"></i> Denúncias Registradas</h3>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-danger">
+            <p><strong id="numDenuncias">0</strong> denúncia(s) foram registradas para este estabelecimento.</p>
+          </div>
+          <div id="listaDenuncias"></div>
+        </div>
+      </div>
+
+      <!-- Informações Educativas -->
+      <div class="card" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+        <div class="card-header">
+          <h3><i class="fas fa-lightbulb"></i> Como Identificar Bebidas Adulteradas</h3>
+        </div>
+        <div class="card-body">
+          <ul class="signals-list">
+            <li>
+              <span class="icon-alert">⚠️</span>
+              <strong>Preços muito abaixo do mercado</strong> - Desconfie de ofertas excessivamente baratas
+            </li>
+            <li>
+              <span class="icon-alert">⚠️</span>
+              <strong>Embalagens suspeitas</strong> - Lacres tortos, rótulos desgastados ou com erros de ortografia
+            </li>
+            <li>
+              <span class="icon-alert">⚠️</span>
+              <strong>Ausência de informações</strong> - Falta de CNPJ, número de lote ou data de validade
+            </li>
+            <li>
+              <span class="icon-check">✓</span>
+              <strong>Sempre exija nota fiscal</strong> - Estabelecimentos sérios emitem nota fiscal
+            </li>
+            <li>
+              <span class="icon-check">✓</span>
+              <strong>Observe a abertura</strong> - Garrafas devem ser abertas na sua frente
+            </li>
+          </ul>
+
+          <div class="mt-3">
+            <h5><i class="fas fa-heartbeat"></i> Sintomas de Intoxicação por Metanol</h5>
+            <p><strong>Procure atendimento médico imediatamente se apresentar:</strong></p>
+            <ul>
+              <li>Visão turva ou embaçada</li>
+              <li>Náusea e vômitos intensos</li>
+              <li>Dor de cabeça severa</li>
+              <li>Dor abdominal forte</li>
+              <li>Dificuldade para respirar</li>
+            </ul>
+          </div>
+
+          <div class="mt-3 flex gap-2 flex-wrap">
+            <a href="educacao.html" class="btn btn-primary">
+              <i class="fas fa-graduation-cap"></i> Saiba Mais
+            </a>
+            <button id="btnDenunciar" class="btn btn-danger">
+              <i class="fas fa-flag"></i> Denunciar Este Estabelecimento
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telefones de Emergência -->
+      <div class="card" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444;">
+        <div class="card-body">
+          <h3><i class="fas fa-phone-alt"></i> Telefones de Emergência</h3>
+          <div class="info-grid">
+            <div>
+              <h5>SAMU</h5>
+              <p style="font-size: 1.5rem; font-weight: 700; color: #ef4444; margin: 0;">
+                <a href="tel:192" style="color: #ef4444; text-decoration: none;">192</a>
+              </p>
+            </div>
+            <div>
+              <h5>Disque-Intoxicação</h5>
+              <p style="font-size: 1.5rem; font-weight: 700; color: #ef4444; margin: 0;">
+                <a href="tel:08007226001" style="color: #ef4444; text-decoration: none;">0800 722 6001</a>
+              </p>
+            </div>
+            <div>
+              <h5>Bombeiros</h5>
+              <p style="font-size: 1.5rem; font-weight: 700; color: #ef4444; margin: 0;">
+                <a href="tel:193" style="color: #ef4444; text-decoration: none;">193</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>MetanolCheck</h4>
+          <p>Plataforma de verificação de segurança de estabelecimentos para prevenção de intoxicação por metanol.</p>
+        </div>
+
+        <div class="footer-section">
+          <h4>Links Úteis</h4>
+          <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="educacao.html">Educação</a></li>
+            <li><a href="denuncia.html">Denunciar</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Contato</h4>
+          <ul>
+            <li><i class="fas fa-envelope"></i> contato@metanolcheck.com.br</li>
+            <li><i class="fas fa-shield-alt"></i> Vigilância Sanitária</li>
+            <li><i class="fas fa-balance-scale"></i> Procon</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclaimer">
+        <p><strong>Avisos Importantes:</strong></p>
+        <p>• Esta aplicação não substitui fiscalização oficial de órgãos competentes.</p>
+        <p>• Em caso de suspeita de bebida adulterada, contate imediatamente as autoridades competentes.</p>
+        <p>• As avaliações são baseadas em dados públicos e contribuições de usuários.</p>
+        <p>• Não nos responsabilizamos por decisões baseadas nestas informações.</p>
+        <p style="margin-top: 16px; text-align: center;">
+          © 2025 MetanolCheck. Desenvolvido para segurança pública.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/validacao.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+    // Scripts específicos da página de resultado
+    let dadosEstabelecimento = null;
+    let cnpjAtual = null;
+
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Obtém CNPJ da URL
+      cnpjAtual = App.obterParametroUrl('cnpj');
+
+      if (!cnpjAtual || !Validacao.validarCNPJ(cnpjAtual)) {
+        mostrarErro('CNPJ inválido ou não fornecido');
+        return;
+      }
+
+      // Consulta dados
+      await carregarDados();
+
+      // Configura botões
+      document.getElementById('btnCompartilhar').addEventListener('click', compartilhar);
+      document.getElementById('btnAvaliar').addEventListener('click', mostrarFormularioAvaliacao);
+      document.getElementById('btnNovaAvaliacao').addEventListener('click', mostrarFormularioAvaliacao);
+      document.getElementById('btnDenunciar').addEventListener('click', () => {
+        window.location.href = `denuncia.html?cnpj=${cnpjAtual}`;
+      });
+    });
+
+    async function carregarDados() {
+      try {
+        App.mostrarLoading();
+
+        // Consulta CNPJ
+        const resultado = await API.consultarCNPJ(cnpjAtual);
+
+        if (!resultado.sucesso) {
+          throw new Error(resultado.erro || 'Erro ao consultar CNPJ');
+        }
+
+        // Processa dados
+        dadosEstabelecimento = API.processarDadosCNPJ(resultado.dados);
+
+        // Calcula score
+        const scoreInfo = API.calcularScore(dadosEstabelecimento, cnpjAtual);
+
+        // Exibe dados
+        exibirDados(dadosEstabelecimento, scoreInfo);
+
+        // Exibe reviews
+        exibirReviews();
+
+        // Exibe denúncias
+        exibirDenuncias();
+
+        App.esconderLoading();
+
+        // Mostra conteúdo
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('resultContent').classList.remove('hidden');
+
+      } catch (error) {
+        App.esconderLoading();
+        mostrarErro(error.message);
+      }
+    }
+
+    function exibirDados(dados, scoreInfo) {
+      // Score
+      document.getElementById('scoreValue').textContent = scoreInfo.score;
+      document.getElementById('scoreLabel').textContent = scoreInfo.categoria;
+      document.getElementById('scoreRecomendacao').textContent = scoreInfo.recomendacao;
+
+      const scoreCircle = document.getElementById('scoreCircle');
+      scoreCircle.className = `score-circle ${scoreInfo.classe}`;
+
+      // Dados cadastrais
+      document.getElementById('razaoSocial').textContent = dados.razaoSocial;
+      document.getElementById('nomeFantasia').textContent = dados.nomeFantasia;
+      document.getElementById('cnpj').textContent = Validacao.formatarCNPJ(cnpjAtual);
+
+      const situacaoEl = document.getElementById('situacao');
+      situacaoEl.innerHTML = `
+        <span class="badge ${dados.situacaoAtiva ? 'badge-success' : 'badge-danger'}">
+          ${dados.situacao}
+        </span>
+      `;
+
+      document.getElementById('dataAbertura').textContent = App.formatarData(dados.dataAbertura);
+
+      const tempoText = dados.tempoFuncionamento > 0
+        ? `${dados.tempoFuncionamento} ano(s)`
+        : 'Menos de 1 ano';
+      document.getElementById('tempoFuncionamento').textContent = tempoText;
+
+      const atividadeEl = document.getElementById('atividadePrincipal');
+      atividadeEl.innerHTML = `
+        ${dados.atividadePrincipal}
+        ${dados.cnaeCompativel
+          ? '<span class="badge badge-success ml-1">✓ Compatível</span>'
+          : '<span class="badge badge-warning ml-1">⚠ Não típico</span>'}
+      `;
+
+      document.getElementById('endereco').textContent = dados.endereco.enderecoCompleto;
+
+      // Contato
+      if (dados.telefone || dados.email) {
+        document.getElementById('contatoSection').style.display = 'block';
+        let contatoHtml = '';
+        if (dados.telefone) {
+          contatoHtml += `<i class="fas fa-phone"></i> ${Validacao.formatarTelefone(dados.telefone)}<br>`;
+        }
+        if (dados.email) {
+          contatoHtml += `<i class="fas fa-envelope"></i> ${dados.email}`;
+        }
+        document.getElementById('contato').innerHTML = contatoHtml;
+      }
+
+      // Sinais positivos
+      const positivosEl = document.getElementById('sinaisPositivos');
+      if (scoreInfo.detalhes.sinaisPositivos.length > 0) {
+        positivosEl.innerHTML = scoreInfo.detalhes.sinaisPositivos.map(sinal =>
+          `<li><span class="icon-check">✓</span> ${sinal}</li>`
+        ).join('');
+      } else {
+        positivosEl.innerHTML = '<li>Nenhum sinal positivo identificado</li>';
+      }
+
+      // Sinais de alerta
+      const alertaEl = document.getElementById('sinaisAlerta');
+      if (scoreInfo.detalhes.sinaisAlerta.length > 0) {
+        alertaEl.innerHTML = scoreInfo.detalhes.sinaisAlerta.map(sinal =>
+          `<li><span class="icon-alert">⚠️</span> ${sinal}</li>`
+        ).join('');
+      } else {
+        alertaEl.innerHTML = '<li><span class="icon-check">✓</span> Nenhum sinal de alerta identificado</li>';
+      }
+    }
+
+    function exibirReviews() {
+      const reviews = Storage.recuperarReviews(cnpjAtual);
+      const stats = Storage.calcularEstatisticasReviews(cnpjAtual);
+
+      // Stats
+      const statsEl = document.getElementById('statsReviews');
+      if (stats.total > 0) {
+        statsEl.innerHTML = `
+          <div class="info-grid">
+            <div class="card" style="text-align: center;">
+              <h5>${stats.total}</h5>
+              <p style="margin: 0; font-size: 0.875rem;">Avaliações</p>
+            </div>
+            <div class="card" style="text-align: center;">
+              <h5>${stats.percentualGarrafasLacradas}%</h5>
+              <p style="margin: 0; font-size: 0.875rem;">Garrafas Lacradas</p>
+            </div>
+            <div class="card" style="text-align: center;">
+              <h5>${stats.percentualNotaFiscal}%</h5>
+              <p style="margin: 0; font-size: 0.875rem;">Nota Fiscal</p>
+            </div>
+            <div class="card" style="text-align: center;">
+              <h5>${stats.mediaLimpeza}/5</h5>
+              <p style="margin: 0; font-size: 0.875rem;">Limpeza</p>
+            </div>
+          </div>
+        `;
+      }
+
+      // Lista de reviews
+      const listaEl = document.getElementById('listaReviews');
+      if (reviews.length === 0) {
+        listaEl.innerHTML = '<p class="alert alert-info">Nenhuma avaliação ainda. Seja o primeiro a avaliar!</p>';
+      } else {
+        listaEl.innerHTML = reviews.map(review => `
+          <div class="review-item">
+            <div class="review-header">
+              <div>
+                ${review.anonimo ? '<strong>Usuário Anônimo</strong>' : '<strong>Usuário</strong>'}
+              </div>
+              <div class="review-date">${App.formatarDataHora(review.data)}</div>
+            </div>
+
+            <div class="review-questions">
+              <div class="review-question">
+                <span>Garrafas lacradas?</span>
+                <span class="badge ${review.garrafasLacradas ? 'badge-success' : 'badge-danger'}">
+                  ${review.garrafasLacradas ? 'Sim' : 'Não'}
+                </span>
+              </div>
+              <div class="review-question">
+                <span>Nota fiscal?</span>
+                <span class="badge ${review.notaFiscal ? 'badge-success' : 'badge-danger'}">
+                  ${review.notaFiscal ? 'Sim' : 'Não'}
+                </span>
+              </div>
+              <div class="review-question">
+                <span>Preços normais?</span>
+                <span class="badge ${review.precosNormais ? 'badge-success' : 'badge-danger'}">
+                  ${review.precosNormais ? 'Sim' : 'Não'}
+                </span>
+              </div>
+              <div class="review-question">
+                <span>Limpeza:</span>
+                ${App.criarEstrelas(review.limpeza)}
+              </div>
+            </div>
+
+            ${review.comentario ? `<p style="margin-top: 12px;"><strong>Comentário:</strong> ${App.sanitizarHTML(review.comentario)}</p>` : ''}
+          </div>
+        `).join('');
+      }
+    }
+
+    function exibirDenuncias() {
+      const denuncias = Storage.recuperarDenuncias(cnpjAtual);
+
+      if (denuncias.length > 0) {
+        document.getElementById('cardDenuncias').style.display = 'block';
+        document.getElementById('numDenuncias').textContent = denuncias.length;
+
+        const listaEl = document.getElementById('listaDenuncias');
+        listaEl.innerHTML = denuncias.map(denuncia => `
+          <div class="review-item" style="border-left: 4px solid #ef4444;">
+            <div class="review-header">
+              <div>
+                ${denuncia.anonimo ? '<strong>Denúncia Anônima</strong>' : '<strong>Denúncia</strong>'}
+              </div>
+              <div class="review-date">${App.formatarData(denuncia.data)}</div>
+            </div>
+            <p>${App.sanitizarHTML(denuncia.descricao)}</p>
+          </div>
+        `).join('');
+      }
+    }
+
+    function mostrarFormularioAvaliacao() {
+      const conteudo = `
+        <form id="formAvaliacao">
+          <div class="form-group">
+            <label class="form-label">As bebidas vieram de garrafas lacradas?</label>
+            <div class="form-checkbox">
+              <input type="checkbox" id="garrafasLacradas" name="garrafasLacradas">
+              <label for="garrafasLacradas">Sim, as garrafas estavam lacradas</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Viu notas fiscais das bebidas?</label>
+            <div class="form-checkbox">
+              <input type="checkbox" id="notaFiscal" name="notaFiscal">
+              <label for="notaFiscal">Sim, vi nota fiscal</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Preços compatíveis com o mercado?</label>
+            <div class="form-checkbox">
+              <input type="checkbox" id="precosNormais" name="precosNormais">
+              <label for="precosNormais">Sim, preços normais</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Avaliação de limpeza (1-5 estrelas):</label>
+            <select id="limpeza" class="form-select" required>
+              <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
+              <option value="4">⭐⭐⭐⭐ Bom</option>
+              <option value="3" selected>⭐⭐⭐ Regular</option>
+              <option value="2">⭐⭐ Ruim</option>
+              <option value="1">⭐ Muito Ruim</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Comentário (opcional):</label>
+            <textarea id="comentario" class="form-textarea" placeholder="Compartilhe sua experiência..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <div class="form-checkbox">
+              <input type="checkbox" id="anonimo" name="anonimo">
+              <label for="anonimo">Avaliar anonimamente</label>
+            </div>
+          </div>
+        </form>
+      `;
+
+      App.mostrarModal('Avaliar Estabelecimento', conteudo, [
+        { texto: 'Cancelar', classe: 'btn-secondary' },
+        {
+          texto: 'Enviar Avaliação',
+          classe: 'btn-primary',
+          callback: () => {
+            salvarAvaliacao();
+          }
+        }
+      ]);
+    }
+
+    function salvarAvaliacao() {
+      const review = {
+        garrafasLacradas: document.getElementById('garrafasLacradas').checked,
+        notaFiscal: document.getElementById('notaFiscal').checked,
+        precosNormais: document.getElementById('precosNormais').checked,
+        limpeza: parseInt(document.getElementById('limpeza').value),
+        comentario: document.getElementById('comentario').value.trim(),
+        anonimo: document.getElementById('anonimo').checked
+      };
+
+      Storage.salvarReview(cnpjAtual, review);
+      App.mostrarAlerta('Avaliação salva com sucesso!', 'success');
+
+      // Recarrega dados
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+
+    function compartilhar() {
+      const dados = {
+        title: `MetanolCheck - ${dadosEstabelecimento.nomeFantasia}`,
+        text: `Verifique a segurança deste estabelecimento no MetanolCheck`,
+        url: window.location.href
+      };
+
+      App.compartilhar(dados);
+    }
+
+    function mostrarErro(mensagem) {
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('errorState').classList.remove('hidden');
+      document.getElementById('errorMessage').textContent = mensagem;
+    }
+  </script>
+</body>
+</html>

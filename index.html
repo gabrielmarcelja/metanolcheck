@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Verifique a segurança de bares e restaurantes e previna intoxicação por metanol. Consulte estabelecimentos por CNPJ e veja avaliações de segurança.">
+  <meta name="keywords" content="metanol, segurança, bares, restaurantes, CNPJ, bebidas, intoxicação">
+  <title>MetanolCheck - Verifique a Segurança de Estabelecimentos</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <i class="fas fa-shield-alt"></i>
+          MetanolCheck
+        </a>
+        <button class="menu-toggle" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+        <nav class="nav">
+          <a href="index.html" class="nav-link">Início</a>
+          <a href="educacao.html" class="nav-link">Educação</a>
+          <a href="denuncia.html" class="nav-link">Denunciar</a>
+          <a href="sobre.html" class="nav-link">Sobre</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Verifique a Segurança de Estabelecimentos</h1>
+      <p>Proteja-se contra intoxicação por metanol. Consulte bares e restaurantes antes de consumir bebidas alcoólicas.</p>
+
+      <!-- Search Box -->
+      <div class="search-box">
+        <div class="search-tabs">
+          <button class="search-tab active" data-tipo="cnpj">
+            <i class="fas fa-building"></i> Por CNPJ
+          </button>
+          <button class="search-tab" data-tipo="nome">
+            <i class="fas fa-search"></i> Por Nome
+          </button>
+          <button class="search-tab" data-tipo="local">
+            <i class="fas fa-map-marker-alt"></i> Perto de Mim
+          </button>
+        </div>
+
+        <!-- Busca por CNPJ -->
+        <form id="formBuscaCNPJ" class="busca-form active">
+          <div class="search-input-group">
+            <input
+              type="text"
+              id="inputCNPJ"
+              class="form-input"
+              placeholder="Digite o CNPJ (XX.XXX.XXX/XXXX-XX)"
+              maxlength="18"
+              required
+            >
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-search"></i> Consultar
+            </button>
+          </div>
+          <p class="form-help">Digite o CNPJ do estabelecimento para verificar sua confiabilidade</p>
+        </form>
+
+        <!-- Busca por Nome -->
+        <form id="formBuscaNome" class="busca-form hidden">
+          <div class="search-input-group">
+            <input
+              type="text"
+              id="inputNome"
+              class="form-input"
+              placeholder="Digite o nome do estabelecimento"
+              required
+            >
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-search"></i> Buscar
+            </button>
+          </div>
+          <p class="form-help">Pesquise estabelecimentos cadastrados pelos usuários</p>
+          <div id="resultadosNome" class="mt-2"></div>
+        </form>
+
+        <!-- Busca por Localização -->
+        <div id="buscaLocal" class="busca-form hidden">
+          <button id="btnLocalizacao" class="btn btn-primary btn-lg" style="width: 100%;">
+            <i class="fas fa-location-arrow"></i> Usar Minha Localização
+          </button>
+          <p class="form-help">Encontre estabelecimentos próximos a você</p>
+          <div id="resultadosLocal" class="mt-2"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Estatísticas -->
+  <section class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-value" id="statEstabelecimentos">0</span>
+        <span class="stat-label">Estabelecimentos Verificados</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value" id="statAvaliacoes">0</span>
+        <span class="stat-label">Avaliações de Usuários</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value" id="statDenuncias">0</span>
+        <span class="stat-label">Denúncias Registradas</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alerta de Segurança -->
+  <section class="container">
+    <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left: 4px solid #f59e0b;">
+      <div class="card-body">
+        <h3><i class="fas fa-exclamation-triangle"></i> Atenção: Por que o metanol é perigoso?</h3>
+        <p>O metanol é um álcool altamente tóxico que pode ser fatal mesmo em pequenas quantidades. Infelizmente, alguns estabelecimentos podem utilizar bebidas adulteradas para reduzir custos, colocando vidas em risco.</p>
+        <div class="flex gap-2 flex-wrap">
+          <a href="educacao.html" class="btn btn-primary">
+            <i class="fas fa-graduation-cap"></i> Aprenda a Se Proteger
+          </a>
+          <a href="denuncia.html" class="btn btn-danger">
+            <i class="fas fa-flag"></i> Reportar Estabelecimento Suspeito
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Como Funciona -->
+  <section class="container">
+    <h2 class="text-center">Como Funciona</h2>
+    <div class="info-grid">
+      <div class="card">
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <div class="info-content">
+            <h5>1. Pesquise</h5>
+            <p>Digite o CNPJ ou nome do estabelecimento que você deseja verificar</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="info-content">
+            <h5>2. Analise o Score</h5>
+            <p>Veja o score de confiança baseado em dados oficiais e avaliações de usuários</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="info-content">
+            <h5>3. Decida com Segurança</h5>
+            <p>Use as informações para tomar decisões mais seguras sobre onde consumir bebidas</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="info-content">
+            <h5>4. Avalie</h5>
+            <p>Contribua avaliando estabelecimentos que você visitou</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Histórico de Buscas -->
+  <section class="container" id="sectionHistorico" style="display: none;">
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fas fa-history"></i> Buscas Recentes</h3>
+      </div>
+      <div class="card-body">
+        <div id="listaHistorico"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Telefones de Emergência -->
+  <section class="container">
+    <div class="card" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444;">
+      <div class="card-body">
+        <h3><i class="fas fa-phone-alt"></i> Telefones de Emergência</h3>
+        <div class="info-grid">
+          <div>
+            <h5>SAMU</h5>
+            <p style="font-size: 1.5rem; font-weight: 700; color: #ef4444; margin: 0;">192</p>
+          </div>
+          <div>
+            <h5>Disque-Intoxicação</h5>
+            <p style="font-size: 1.5rem; font-weight: 700; color: #ef4444; margin: 0;">0800 722 6001</p>
+          </div>
+          <div>
+            <h5>Bombeiros</h5>
+            <p style="font-size: 1.5rem; font-weight: 700; color: #ef4444; margin: 0;">193</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>MetanolCheck</h4>
+          <p>Plataforma de verificação de segurança de estabelecimentos para prevenção de intoxicação por metanol.</p>
+        </div>
+
+        <div class="footer-section">
+          <h4>Links Úteis</h4>
+          <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="educacao.html">Educação</a></li>
+            <li><a href="denuncia.html">Denunciar</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Contato</h4>
+          <ul>
+            <li><i class="fas fa-envelope"></i> contato@metanolcheck.com.br</li>
+            <li><i class="fas fa-shield-alt"></i> Vigilância Sanitária</li>
+            <li><i class="fas fa-balance-scale"></i> Procon</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclaimer">
+        <p><strong>Avisos Importantes:</strong></p>
+        <p>• Esta aplicação não substitui fiscalização oficial de órgãos competentes.</p>
+        <p>• Em caso de suspeita de bebida adulterada, contate imediatamente as autoridades competentes.</p>
+        <p>• As avaliações são baseadas em dados públicos e contribuições de usuários.</p>
+        <p>• Não nos responsabilizamos por decisões baseadas nestas informações.</p>
+        <p style="margin-top: 16px; text-align: center;">
+          © 2025 MetanolCheck. Desenvolvido para segurança pública.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/validacao.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+    // Scripts específicos da página inicial
+    document.addEventListener('DOMContentLoaded', function() {
+      // Configurar tabs de busca
+      const tabs = document.querySelectorAll('.search-tab');
+      const forms = document.querySelectorAll('.busca-form');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tipo = this.dataset.tipo;
+
+          // Atualiza tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+
+          // Atualiza forms
+          forms.forEach(f => f.classList.add('hidden'));
+
+          if (tipo === 'cnpj') {
+            document.getElementById('formBuscaCNPJ').classList.remove('hidden');
+          } else if (tipo === 'nome') {
+            document.getElementById('formBuscaNome').classList.remove('hidden');
+          } else if (tipo === 'local') {
+            document.getElementById('buscaLocal').classList.remove('hidden');
+          }
+        });
+      });
+
+      // Máscara de CNPJ
+      const inputCNPJ = document.getElementById('inputCNPJ');
+      Validacao.aplicarMascaraCNPJ(inputCNPJ);
+
+      // Submit busca por CNPJ
+      const formBuscaCNPJ = document.getElementById('formBuscaCNPJ');
+      formBuscaCNPJ.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const cnpj = inputCNPJ.value;
+
+        if (!Validacao.validarCNPJ(cnpj)) {
+          App.mostrarAlerta('CNPJ inválido. Verifique o formato.', 'danger');
+          return;
+        }
+
+        // Redireciona para página de resultado
+        const cnpjLimpo = Validacao.limparCNPJ(cnpj);
+        window.location.href = `resultado.html?cnpj=${cnpjLimpo}`;
+      });
+
+      // Busca por nome
+      const formBuscaNome = document.getElementById('formBuscaNome');
+      const inputNome = document.getElementById('inputNome');
+      const resultadosNome = document.getElementById('resultadosNome');
+
+      formBuscaNome.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const nome = inputNome.value.trim().toLowerCase();
+
+        if (nome.length < 3) {
+          App.mostrarAlerta('Digite pelo menos 3 caracteres', 'warning');
+          return;
+        }
+
+        // Busca nos dados locais
+        const cache = Storage.recuperar(Storage.KEYS.CACHE_CNPJ) || {};
+        const resultados = [];
+
+        Object.entries(cache).forEach(([cnpj, item]) => {
+          const dados = item.dados;
+          const nomeFantasia = (dados.alias || dados.company?.name || '').toLowerCase();
+          const razaoSocial = (dados.company?.name || dados.name || '').toLowerCase();
+
+          if (nomeFantasia.includes(nome) || razaoSocial.includes(nome)) {
+            resultados.push({
+              cnpj: cnpj,
+              nomeFantasia: dados.alias || dados.company?.name || 'Sem nome',
+              razaoSocial: dados.company?.name || dados.name || '',
+              endereco: dados.address?.city || ''
+            });
+          }
+        });
+
+        if (resultados.length === 0) {
+          resultadosNome.innerHTML = '<p class="alert alert-info">Nenhum resultado encontrado. Experimente buscar por CNPJ.</p>';
+        } else {
+          let html = '<h5>Resultados encontrados:</h5>';
+          resultados.forEach(r => {
+            html += `
+              <div class="card" style="margin-bottom: 8px; cursor: pointer;" onclick="window.location.href='resultado.html?cnpj=${r.cnpj}'">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <strong>${r.nomeFantasia}</strong>
+                    <p style="margin: 0; font-size: 0.875rem; color: var(--cinza-600);">${r.razaoSocial}</p>
+                    <p style="margin: 0; font-size: 0.875rem; color: var(--cinza-600);">CNPJ: ${Validacao.formatarCNPJ(r.cnpj)}</p>
+                    ${r.endereco ? `<p style="margin: 0; font-size: 0.875rem;"><i class="fas fa-map-marker-alt"></i> ${r.endereco}</p>` : ''}
+                  </div>
+                  <i class="fas fa-chevron-right"></i>
+                </div>
+              </div>
+            `;
+          });
+          resultadosNome.innerHTML = html;
+        }
+      });
+
+      // Busca por localização
+      const btnLocalizacao = document.getElementById('btnLocalizacao');
+      const resultadosLocal = document.getElementById('resultadosLocal');
+
+      btnLocalizacao.addEventListener('click', async function() {
+        try {
+          btnLocalizacao.disabled = true;
+          btnLocalizacao.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Obtendo localização...';
+
+          const localizacao = await API.obterLocalizacao();
+
+          // Busca estabelecimentos com endereço no cache
+          const cache = Storage.recuperar(Storage.KEYS.CACHE_CNPJ) || {};
+          const estabelecimentos = Object.entries(cache).map(([cnpj, item]) => ({
+            cnpj: cnpj,
+            dados: item.dados,
+            nomeFantasia: item.dados.alias || item.dados.company?.name || 'Sem nome',
+            cidade: item.dados.address?.city || '',
+            estado: item.dados.address?.state || ''
+          })).filter(e => e.cidade);
+
+          if (estabelecimentos.length === 0) {
+            resultadosLocal.innerHTML = `
+              <div class="alert alert-info">
+                <p><strong>Nenhum estabelecimento próximo encontrado no cache local.</strong></p>
+                <p>Experimente buscar estabelecimentos por CNPJ para alimentar nossa base de dados local!</p>
+              </div>
+            `;
+          } else {
+            let html = '<h5>Estabelecimentos cadastrados:</h5>';
+            estabelecimentos.slice(0, 10).forEach(e => {
+              html += `
+                <div class="card" style="margin-bottom: 8px; cursor: pointer;" onclick="window.location.href='resultado.html?cnpj=${e.cnpj}'">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <strong>${e.nomeFantasia}</strong>
+                      <p style="margin: 0; font-size: 0.875rem;">
+                        <i class="fas fa-map-marker-alt"></i> ${e.cidade} - ${e.estado}
+                      </p>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                  </div>
+                </div>
+              `;
+            });
+            resultadosLocal.innerHTML = html;
+          }
+
+          btnLocalizacao.innerHTML = '<i class="fas fa-check"></i> Localização obtida!';
+
+        } catch (error) {
+          App.mostrarAlerta(error.message, 'danger');
+          btnLocalizacao.innerHTML = '<i class="fas fa-location-arrow"></i> Tentar Novamente';
+        } finally {
+          btnLocalizacao.disabled = false;
+        }
+      });
+
+      // Carrega estatísticas
+      const stats = Storage.recuperarEstatisticas();
+      document.getElementById('statEstabelecimentos').textContent = stats.totalEstabelecimentos;
+      document.getElementById('statAvaliacoes').textContent = stats.totalReviews;
+      document.getElementById('statDenuncias').textContent = stats.totalDenuncias;
+
+      // Carrega histórico
+      const historico = Storage.recuperarHistorico(5);
+      if (historico.length > 0) {
+        document.getElementById('sectionHistorico').style.display = 'block';
+        const listaHistorico = document.getElementById('listaHistorico');
+
+        let html = '';
+        historico.forEach(item => {
+          if (item.tipo === 'cnpj' && item.sucesso) {
+            html += `
+              <div class="card" style="margin-bottom: 8px; cursor: pointer;" onclick="window.location.href='resultado.html?cnpj=${item.cnpj}'">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <strong>${item.nomeFantasia || 'Estabelecimento'}</strong>
+                    <p style="margin: 0; font-size: 0.875rem; color: var(--cinza-600);">
+                      CNPJ: ${Validacao.formatarCNPJ(item.cnpj)}
+                    </p>
+                    <p style="margin: 0; font-size: 0.875rem; color: var(--cinza-600);">
+                      ${App.formatarDataHora(item.data)}
+                    </p>
+                  </div>
+                  <i class="fas fa-chevron-right"></i>
+                </div>
+              </div>
+            `;
+          }
+        });
+
+        listaHistorico.innerHTML = html || '<p>Nenhuma busca recente</p>';
+      }
+    });
+  </script>
+</body>
+</html>

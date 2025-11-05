@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Denuncie estabelecimentos suspeitos de vender bebidas adulteradas">
+  <title>Denunciar Estabelecimento - MetanolCheck</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <i class="fas fa-shield-alt"></i>
+          MetanolCheck
+        </a>
+        <button class="menu-toggle" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+        <nav class="nav">
+          <a href="index.html" class="nav-link">Início</a>
+          <a href="educacao.html" class="nav-link">Educação</a>
+          <a href="denuncia.html" class="nav-link">Denunciar</a>
+          <a href="sobre.html" class="nav-link">Sobre</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" style="padding: 48px 0;">
+    <div class="container">
+      <h1><i class="fas fa-flag"></i> Denunciar Estabelecimento</h1>
+      <p>Ajude a proteger outras pessoas reportando estabelecimentos suspeitos</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container container-narrow" style="margin-top: 32px; margin-bottom: 32px;">
+
+    <!-- Alertas Importantes -->
+    <div class="alert alert-danger">
+      <h4><i class="fas fa-exclamation-triangle"></i> Importante: Em caso de emergência</h4>
+      <p><strong>Se você ou alguém apresentar sintomas de intoxicação, ligue imediatamente:</strong></p>
+      <div class="flex gap-2 flex-wrap mt-2">
+        <a href="tel:192" class="btn btn-danger">
+          <i class="fas fa-phone-alt"></i> SAMU 192
+        </a>
+        <a href="tel:08007226001" class="btn btn-danger">
+          <i class="fas fa-phone-alt"></i> Disque-Intoxicação 0800 722 6001
+        </a>
+      </div>
+    </div>
+
+    <div class="alert alert-warning">
+      <h4><i class="fas fa-info-circle"></i> Orientações para Denúncias</h4>
+      <ul style="margin-bottom: 0;">
+        <li><strong>NÃO</strong> faça testes caseiros com bebidas suspeitas</li>
+        <li>Denuncie também aos órgãos oficiais: Vigilância Sanitária, Polícia Civil, Procon</li>
+        <li>Se possível, guarde a embalagem da bebida como prova</li>
+        <li>Denúncias anônimas são aceitas e sua identidade será protegida</li>
+        <li>Faça denúncias baseadas em fatos, não em suposições</li>
+      </ul>
+    </div>
+
+    <!-- Formulário de Denúncia -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fas fa-edit"></i> Formulário de Denúncia</h3>
+      </div>
+      <div class="card-body">
+        <form id="formDenuncia">
+
+          <div class="form-group">
+            <label class="form-label" for="cnpjDenuncia">
+              CNPJ do Estabelecimento
+              <span style="color: var(--cinza-600); font-weight: normal;">(opcional se não souber)</span>
+            </label>
+            <input
+              type="text"
+              id="cnpjDenuncia"
+              class="form-input"
+              placeholder="XX.XXX.XXX/XXXX-XX"
+              maxlength="18"
+              data-validacao="cnpj"
+              data-nome="CNPJ"
+            >
+            <p class="form-help">Se você tiver o CNPJ do estabelecimento, isso ajudará no rastreamento</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="nomeEstabelecimento">
+              Nome do Estabelecimento *
+            </label>
+            <input
+              type="text"
+              id="nomeEstabelecimento"
+              class="form-input"
+              placeholder="Digite o nome do bar, restaurante ou loja"
+              required
+              data-nome="Nome do estabelecimento"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="enderecoEstabelecimento">
+              Endereço do Estabelecimento *
+            </label>
+            <input
+              type="text"
+              id="enderecoEstabelecimento"
+              class="form-input"
+              placeholder="Rua, número, bairro, cidade - Estado"
+              required
+              data-nome="Endereço"
+            >
+            <p class="form-help">Seja o mais específico possível</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="dataDenuncia">
+              Data do Ocorrido *
+            </label>
+            <input
+              type="date"
+              id="dataDenuncia"
+              class="form-input"
+              required
+              data-validacao="data"
+              data-nome="Data"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="tipoDenuncia">
+              Tipo de Problema *
+            </label>
+            <select id="tipoDenuncia" class="form-select" required>
+              <option value="">Selecione...</option>
+              <option value="bebida-suspeita">Bebida com aparência/cheiro suspeito</option>
+              <option value="intoxicacao">Sintomas de intoxicação após consumo</option>
+              <option value="preco-baixo">Preços muito abaixo do mercado</option>
+              <option value="embalagem-suspeita">Embalagem adulterada ou sem lacre</option>
+              <option value="sem-nota-fiscal">Estabelecimento não emite nota fiscal</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="descricaoDenuncia">
+              Descrição Detalhada *
+            </label>
+            <textarea
+              id="descricaoDenuncia"
+              class="form-textarea"
+              placeholder="Descreva o que aconteceu com o máximo de detalhes possível. Inclua informações sobre a bebida, sintomas, testemunhas, etc."
+              required
+              data-nome="Descrição"
+              style="min-height: 150px;"
+            ></textarea>
+            <p class="form-help">Quanto mais detalhes, mais útil será a denúncia</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              Você tem provas? (Fotos, notas, testemunhas)
+            </label>
+            <div class="form-checkbox">
+              <input type="checkbox" id="temProvas" name="temProvas">
+              <label for="temProvas">Sim, tenho provas que posso apresentar às autoridades</label>
+            </div>
+            <p class="form-help">Nota: Esta plataforma não armazena arquivos. Guarde as provas para apresentar aos órgãos oficiais.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="contatoDenunciante">
+              Seu Contato (Email ou Telefone)
+              <span style="color: var(--cinza-600); font-weight: normal;">(opcional)</span>
+            </label>
+            <input
+              type="text"
+              id="contatoDenunciante"
+              class="form-input"
+              placeholder="seu@email.com ou (XX) XXXXX-XXXX"
+            >
+            <p class="form-help">Opcional, mas pode ajudar na investigação</p>
+          </div>
+
+          <div class="form-group">
+            <div class="form-checkbox">
+              <input type="checkbox" id="denunciaAnonima" name="denunciaAnonima">
+              <label for="denunciaAnonima">Denúncia anônima</label>
+            </div>
+            <p class="form-help">Suas informações de contato não serão exibidas publicamente</p>
+          </div>
+
+          <div class="form-group">
+            <div class="form-checkbox">
+              <input type="checkbox" id="concordoTermos" name="concordoTermos" required>
+              <label for="concordoTermos">
+                Declaro que as informações fornecidas são verdadeiras e estou ciente de que denúncias falsas podem ter consequências legais *
+              </label>
+            </div>
+          </div>
+
+          <div id="formErrors" class="alert alert-danger hidden"></div>
+
+          <div class="flex gap-2 flex-wrap">
+            <button type="submit" class="btn btn-danger btn-lg">
+              <i class="fas fa-paper-plane"></i> Enviar Denúncia
+            </button>
+            <a href="index.html" class="btn btn-secondary btn-lg">
+              <i class="fas fa-times"></i> Cancelar
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Informações Adicionais -->
+    <div class="card" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+      <div class="card-header">
+        <h3><i class="fas fa-lightbulb"></i> O que acontece após a denúncia?</h3>
+      </div>
+      <div class="card-body">
+        <ol style="padding-left: 20px;">
+          <li><strong>Registro Local:</strong> Sua denúncia ficará registrada na plataforma e será visível na página do estabelecimento</li>
+          <li><strong>Alerta a Outros Usuários:</strong> Outros usuários verão que há denúncias contra o estabelecimento</li>
+          <li><strong>Score de Confiança:</strong> O score de confiança do estabelecimento será reduzido</li>
+          <li><strong>Ação Recomendada:</strong> Recomendamos também fazer denúncia oficial aos órgãos competentes</li>
+        </ol>
+
+        <div class="mt-3">
+          <h5>Onde denunciar oficialmente:</h5>
+          <ul class="signals-list">
+            <li>
+              <i class="fas fa-check icon-check"></i>
+              <strong>Vigilância Sanitária</strong> - Órgão responsável pela fiscalização de estabelecimentos
+            </li>
+            <li>
+              <i class="fas fa-check icon-check"></i>
+              <strong>Polícia Civil</strong> - Para crimes de adulteração de produtos
+            </li>
+            <li>
+              <i class="fas fa-check icon-check"></i>
+              <strong>Procon</strong> - Para questões de direito do consumidor
+            </li>
+            <li>
+              <i class="fas fa-check icon-check"></i>
+              <strong>Ministério Público</strong> - Para crimes contra a saúde pública
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sintomas de Intoxicação -->
+    <div class="card" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444;">
+      <div class="card-header">
+        <h3><i class="fas fa-heartbeat"></i> Sintomas de Intoxicação por Metanol</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Procure atendimento médico IMEDIATAMENTE se apresentar:</strong></p>
+        <ul class="signals-list">
+          <li><span class="icon-alert">⚠️</span> Visão turva ou embaçada (pode levar à cegueira)</li>
+          <li><span class="icon-alert">⚠️</span> Náusea e vômitos intensos</li>
+          <li><span class="icon-alert">⚠️</span> Dor de cabeça severa</li>
+          <li><span class="icon-alert">⚠️</span> Dor abdominal forte</li>
+          <li><span class="icon-alert">⚠️</span> Dificuldade para respirar</li>
+          <li><span class="icon-alert">⚠️</span> Confusão mental ou perda de consciência</li>
+          <li><span class="icon-alert">⚠️</span> Convulsões</li>
+        </ul>
+
+        <div class="flex gap-2 flex-wrap mt-3">
+          <a href="tel:192" class="btn btn-danger">
+            <i class="fas fa-phone-alt"></i> SAMU 192
+          </a>
+          <a href="tel:08007226001" class="btn btn-danger">
+            <i class="fas fa-phone-alt"></i> Disque-Intoxicação 0800 722 6001
+          </a>
+          <a href="educacao.html" class="btn btn-primary">
+            <i class="fas fa-graduation-cap"></i> Saiba Mais
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>MetanolCheck</h4>
+          <p>Plataforma de verificação de segurança de estabelecimentos para prevenção de intoxicação por metanol.</p>
+        </div>
+
+        <div class="footer-section">
+          <h4>Links Úteis</h4>
+          <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="educacao.html">Educação</a></li>
+            <li><a href="denuncia.html">Denunciar</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Contato</h4>
+          <ul>
+            <li><i class="fas fa-envelope"></i> contato@metanolcheck.com.br</li>
+            <li><i class="fas fa-shield-alt"></i> Vigilância Sanitária</li>
+            <li><i class="fas fa-balance-scale"></i> Procon</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclaimer">
+        <p><strong>Avisos Importantes:</strong></p>
+        <p>• Esta aplicação não substitui fiscalização oficial de órgãos competentes.</p>
+        <p>• Em caso de suspeita de bebida adulterada, contate imediatamente as autoridades competentes.</p>
+        <p>• As avaliações são baseadas em dados públicos e contribuições de usuários.</p>
+        <p>• Não nos responsabilizamos por decisões baseadas nestas informações.</p>
+        <p style="margin-top: 16px; text-align: center;">
+          © 2025 MetanolCheck. Desenvolvido para segurança pública.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/validacao.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+
+  <script>
+    // Scripts específicos da página de denúncia
+    document.addEventListener('DOMContentLoaded', function() {
+      // Verifica se há CNPJ na URL
+      const cnpjUrl = App.obterParametroUrl('cnpj');
+      if (cnpjUrl) {
+        document.getElementById('cnpjDenuncia').value = Validacao.formatarCNPJ(cnpjUrl);
+
+        // Tenta preencher nome do estabelecimento do cache
+        const cache = Storage.recuperarCacheCNPJ(cnpjUrl);
+        if (cache) {
+          const nomeFantasia = cache.alias || cache.company?.name || '';
+          if (nomeFantasia) {
+            document.getElementById('nomeEstabelecimento').value = nomeFantasia;
+          }
+
+          const endereco = cache.address;
+          if (endereco) {
+            const enderecoCompleto = API.montarEnderecoCompleto(endereco);
+            document.getElementById('enderecoEstabelecimento').value = enderecoCompleto;
+          }
+        }
+      }
+
+      // Máscara de CNPJ
+      const inputCNPJ = document.getElementById('cnpjDenuncia');
+      Validacao.aplicarMascaraCNPJ(inputCNPJ);
+
+      // Define data máxima como hoje
+      const inputData = document.getElementById('dataDenuncia');
+      const hoje = new Date().toISOString().split('T')[0];
+      inputData.max = hoje;
+      inputData.value = hoje;
+
+      // Submit do formulário
+      const form = document.getElementById('formDenuncia');
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Validação
+        Validacao.limparErrosFormulario(form);
+        const validacao = validarFormularioDenuncia();
+
+        if (!validacao.valido) {
+          const errorDiv = document.getElementById('formErrors');
+          errorDiv.innerHTML = '<strong>Erros encontrados:</strong><ul>' +
+            validacao.erros.map(erro => `<li>${erro}</li>`).join('') +
+            '</ul>';
+          errorDiv.classList.remove('hidden');
+          App.scrollPara('#formErrors');
+          return;
+        }
+
+        // Coleta dados
+        const cnpj = Validacao.limparCNPJ(document.getElementById('cnpjDenuncia').value);
+        const denuncia = {
+          cnpj: cnpj,
+          nomeEstabelecimento: document.getElementById('nomeEstabelecimento').value.trim(),
+          endereco: document.getElementById('enderecoEstabelecimento').value.trim(),
+          dataOcorrido: document.getElementById('dataDenuncia').value,
+          tipo: document.getElementById('tipoDenuncia').value,
+          descricao: document.getElementById('descricaoDenuncia').value.trim(),
+          temProvas: document.getElementById('temProvas').checked,
+          contato: document.getElementById('contatoDenunciante').value.trim(),
+          anonimo: document.getElementById('denunciaAnonima').checked
+        };
+
+        // Salva denúncia
+        if (cnpj) {
+          Storage.salvarDenuncia(cnpj, denuncia);
+        }
+
+        // Mostra sucesso
+        App.mostrarModal(
+          'Denúncia Registrada',
+          `
+            <div class="alert alert-success">
+              <h4><i class="fas fa-check-circle"></i> Denúncia registrada com sucesso!</h4>
+              <p>Sua denúncia foi registrada em nossa plataforma. Recomendamos que você também faça uma denúncia oficial aos órgãos competentes:</p>
+              <ul>
+                <li>Vigilância Sanitária</li>
+                <li>Polícia Civil</li>
+                <li>Procon</li>
+              </ul>
+              ${cnpj ? `<p class="mt-2"><strong>A denúncia aparecerá na página do estabelecimento.</strong></p>` : ''}
+            </div>
+          `,
+          [
+            {
+              texto: 'Ver Resultado',
+              classe: 'btn-primary',
+              callback: () => {
+                if (cnpj) {
+                  window.location.href = `resultado.html?cnpj=${cnpj}`;
+                } else {
+                  window.location.href = 'index.html';
+                }
+              }
+            },
+            {
+              texto: 'Nova Denúncia',
+              classe: 'btn-secondary',
+              callback: () => {
+                form.reset();
+                inputData.value = hoje;
+                window.scrollTo(0, 0);
+              }
+            }
+          ]
+        );
+      });
+
+      // Quando marca denúncia anônima, limpa contato
+      document.getElementById('denunciaAnonima').addEventListener('change', function() {
+        if (this.checked) {
+          document.getElementById('contatoDenunciante').value = '';
+          document.getElementById('contatoDenunciante').disabled = true;
+        } else {
+          document.getElementById('contatoDenunciante').disabled = false;
+        }
+      });
+    });
+
+    function validarFormularioDenuncia() {
+      const erros = [];
+
+      // CNPJ (opcional, mas se preenchido deve ser válido)
+      const cnpj = document.getElementById('cnpjDenuncia').value.trim();
+      if (cnpj && !Validacao.validarCNPJ(cnpj)) {
+        erros.push('CNPJ inválido');
+      }
+
+      // Nome do estabelecimento
+      const nome = document.getElementById('nomeEstabelecimento').value.trim();
+      if (!Validacao.validarObrigatorio(nome)) {
+        erros.push('Nome do estabelecimento é obrigatório');
+      }
+
+      // Endereço
+      const endereco = document.getElementById('enderecoEstabelecimento').value.trim();
+      if (!Validacao.validarObrigatorio(endereco)) {
+        erros.push('Endereço é obrigatório');
+      }
+
+      // Data
+      const data = document.getElementById('dataDenuncia').value;
+      if (!Validacao.validarData(data)) {
+        erros.push('Data inválida');
+      }
+      if (!Validacao.validarDataNaoFutura(data)) {
+        erros.push('Data não pode ser futura');
+      }
+
+      // Tipo
+      const tipo = document.getElementById('tipoDenuncia').value;
+      if (!tipo) {
+        erros.push('Selecione o tipo de problema');
+      }
+
+      // Descrição
+      const descricao = document.getElementById('descricaoDenuncia').value.trim();
+      if (!Validacao.validarComprimentoMinimo(descricao, 20)) {
+        erros.push('Descrição deve ter pelo menos 20 caracteres');
+      }
+
+      // Termos
+      const concordo = document.getElementById('concordoTermos').checked;
+      if (!concordo) {
+        erros.push('Você deve concordar com os termos');
+      }
+
+      return {
+        valido: erros.length === 0,
+        erros: erros
+      };
+    }
+  </script>
+</body>
+</html>

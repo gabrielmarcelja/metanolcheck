@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conheça o MetanolCheck, nossa missão e como calculamos o score de confiança">
+  <title>Sobre o MetanolCheck</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <i class="fas fa-shield-alt"></i>
+          MetanolCheck
+        </a>
+        <button class="menu-toggle" aria-label="Menu">
+          <i class="fas fa-bars"></i>
+        </button>
+        <nav class="nav">
+          <a href="index.html" class="nav-link">Início</a>
+          <a href="educacao.html" class="nav-link">Educação</a>
+          <a href="denuncia.html" class="nav-link">Denunciar</a>
+          <a href="sobre.html" class="nav-link">Sobre</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1><i class="fas fa-info-circle"></i> Sobre o MetanolCheck</h1>
+      <p>Conheça nossa missão e como funcionamos</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container container-narrow" style="margin-top: 32px; margin-bottom: 32px;">
+
+    <!-- Motivação -->
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-heart"></i> Nossa Missão</h2>
+      </div>
+      <div class="card-body">
+        <p>O <strong>MetanolCheck</strong> nasceu da necessidade urgente de proteger consumidores brasileiros contra os riscos de intoxicação por metanol em bebidas alcoólicas.</p>
+
+        <p>Recentemente, casos graves de intoxicação por metanol chocaram o país, resultando em mortes e sequelas permanentes como cegueira. Estes casos poderiam ter sido evitados se os consumidores tivessem acesso a informações sobre a confiabilidade dos estabelecimentos.</p>
+
+        <div class="alert alert-info mt-3">
+          <h4>🎯 Nossos Objetivos:</h4>
+          <ul style="margin-bottom: 0;">
+            <li>Fornecer informações transparentes sobre estabelecimentos</li>
+            <li>Educar o público sobre os riscos do metanol</li>
+            <li>Criar uma comunidade colaborativa de consumidores conscientes</li>
+            <li>Reduzir casos de intoxicação por bebidas adulteradas</li>
+            <li>Pressionar por maior fiscalização e punição de infratores</li>
+          </ul>
+        </div>
+
+        <p class="mt-3"><strong>Esta é uma ferramenta de utilidade pública, gratuita e sem fins lucrativos.</strong> Nosso único interesse é proteger vidas.</p>
+      </div>
+    </div>
+
+    <!-- Como Funciona -->
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-cogs"></i> Como Funciona</h2>
+      </div>
+      <div class="card-body">
+        <h4>1. Consulta de Dados Públicos</h4>
+        <p>Utilizamos a API pública CNPJá para consultar dados cadastrais oficiais dos estabelecimentos, incluindo:</p>
+        <ul>
+          <li>Situação cadastral (ativo, irregular, etc.)</li>
+          <li>Tempo de funcionamento</li>
+          <li>Atividade econômica (CNAE)</li>
+          <li>Endereço e localização</li>
+        </ul>
+
+        <h4 class="mt-3">2. Avaliações da Comunidade</h4>
+        <p>Usuários contribuem com avaliações baseadas em critérios específicos de segurança:</p>
+        <ul>
+          <li>Bebidas servidas de garrafas lacradas?</li>
+          <li>Estabelecimento emite nota fiscal?</li>
+          <li>Preços compatíveis com o mercado?</li>
+          <li>Nível de limpeza e organização</li>
+        </ul>
+
+        <h4 class="mt-3">3. Registro de Denúncias</h4>
+        <p>Denúncias de usuários são registradas e impactam negativamente o score de confiança do estabelecimento.</p>
+
+        <h4 class="mt-3">4. Armazenamento Local</h4>
+        <p>Todos os dados são armazenados <strong>localmente no seu navegador</strong> (localStorage), sem necessidade de servidor backend. Isso garante:</p>
+        <ul>
+          <li>✅ Privacidade total dos usuários</li>
+          <li>✅ Funcionamento offline para dados já consultados</li>
+          <li>✅ Zero custos de infraestrutura</li>
+          <li>✅ Dados sempre disponíveis mesmo sem conexão</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Metodologia do Score -->
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-calculator"></i> Como Calculamos o Score de Confiança</h2>
+      </div>
+      <div class="card-body">
+        <p>O score de confiança varia de <strong>0 a 100</strong> e é calculado com base em múltiplos fatores. Veja a tabela de pontuação:</p>
+
+        <div class="card" style="background-color: var(--cinza-50);">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: var(--cor-principal); color: white;">
+                <th style="padding: 12px; text-align: left;">Critério</th>
+                <th style="padding: 12px; text-align: center;">Pontos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--cinza-200);">
+                <td style="padding: 12px;">
+                  <strong>Situação Cadastral Ativa</strong><br>
+                  <small>CNPJ regular e empresa em funcionamento legal</small>
+                </td>
+                <td style="padding: 12px; text-align: center; font-weight: 700; color: var(--cor-sucesso);">+30</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--cinza-200);">
+                <td style="padding: 12px;">
+                  <strong>Tempo de Funcionamento</strong><br>
+                  <small>≥3 anos: +20 pontos | 1-3 anos: +10 pontos</small>
+                </td>
+                <td style="padding: 12px; text-align: center; font-weight: 700; color: var(--cor-sucesso);">+20</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--cinza-200);">
+                <td style="padding: 12px;">
+                  <strong>CNAE Compatível</strong><br>
+                  <small>Atividade compatível com bar/restaurante</small>
+                </td>
+                <td style="padding: 12px; text-align: center; font-weight: 700; color: var(--cor-sucesso);">+20</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--cinza-200);">
+                <td style="padding: 12px;">
+                  <strong>Avaliações Positivas</strong><br>
+                  <small>Garrafas lacradas (10) + Nota fiscal (10) + Limpeza (10)</small>
+                </td>
+                <td style="padding: 12px; text-align: center; font-weight: 700; color: var(--cor-sucesso);">+30</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px;">
+                  <strong>Denúncias Registradas</strong><br>
+                  <small>-15 pontos por denúncia (máximo -45 pontos)</small>
+                </td>
+                <td style="padding: 12px; text-align: center; font-weight: 700; color: var(--cor-perigo);">-45</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 class="mt-3">Interpretação do Score:</h4>
+        <div class="info-grid">
+          <div class="card" style="border-left: 4px solid var(--cor-sucesso);">
+            <h5 style="color: var(--cor-sucesso);">80-100: Estabelecimento Confiável</h5>
+            <p style="margin: 0; font-size: 0.875rem;">Bons indicadores de confiabilidade e transparência</p>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--cor-atencao);">
+            <h5 style="color: var(--cor-atencao);">50-79: Atenção Recomendada</h5>
+            <p style="margin: 0; font-size: 0.875rem;">Alguns pontos de atenção identificados</p>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--cor-perigo);">
+            <h5 style="color: var(--cor-perigo);">0-49: Risco Alto - Evite</h5>
+            <p style="margin: 0; font-size: 0.875rem;">Múltiplos indicadores de risco identificados</p>
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-3">
+          <h5>💡 Transparência é Fundamental</h5>
+          <p style="margin-bottom: 0;">Acreditamos em total transparência sobre como calculamos o score. Não há algoritmos secretos ou critérios ocultos. Tudo está aberto e documentado.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Limitações -->
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-exclamation-triangle"></i> Limitações e Avisos Importantes</h2>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-warning">
+          <h4>⚠️ Esta ferramenta NÃO substitui fiscalização oficial</h4>
+          <p>O MetanolCheck é uma ferramenta complementar de conscientização. Não temos poder de fiscalização e não realizamos inspeções presenciais.</p>
+        </div>
+
+        <h5>Limitações Técnicas:</h5>
+        <ul>
+          <li><strong>Dados Públicos:</strong> Dependemos de APIs públicas que podem estar desatualizadas ou incompletas</li>
+          <li><strong>Avaliações Subjetivas:</strong> Avaliações são baseadas em percepções individuais dos usuários</li>
+          <li><strong>Cobertura Limitada:</strong> Apenas estabelecimentos pesquisados aparecem no sistema</li>
+          <li><strong>Sem Análise Química:</strong> Não realizamos testes de laboratório em bebidas</li>
+        </ul>
+
+        <h5 class="mt-3">O que NÃO Podemos Garantir:</h5>
+        <ul>
+          <li>❌ Que um estabelecimento com score alto esteja 100% seguro</li>
+          <li>❌ Que as avaliações sejam sempre precisas e imparciais</li>
+          <li>❌ Que denúncias sejam todas verdadeiras e fundamentadas</li>
+          <li>❌ Responsabilidade por decisões baseadas nestas informações</li>
+        </ul>
+
+        <h5 class="mt-3">Recomendações:</h5>
+        <ul class="signals-list">
+          <li><span class="icon-check">✓</span> Use o MetanolCheck como <strong>uma</strong> das ferramentas de decisão</li>
+          <li><span class="icon-check">✓</span> Sempre observe o estabelecimento pessoalmente</li>
+          <li><span class="icon-check">✓</span> Confie em seus instintos e bom senso</li>
+          <li><span class="icon-check">✓</span> Em caso de dúvida, evite consumir</li>
+          <li><span class="icon-check">✓</span> Denuncie suspeitas às autoridades competentes</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tecnologia -->
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-code"></i> Tecnologia</h2>
+      </div>
+      <div class="card-body">
+        <p>O MetanolCheck é uma aplicação <strong>100% frontend</strong>, construída com tecnologias web padrão:</p>
+
+        <div class="info-grid">
+          <div>
+            <h5>🌐 Frontend</h5>
+            <ul>
+              <li>HTML5 semântico</li>
+              <li>CSS3 com variáveis</li>
+              <li>JavaScript puro (Vanilla JS)</li>
+              <li>Design responsivo mobile-first</li>
+            </ul>
+          </div>
+
+          <div>
+            <h5>💾 Armazenamento</h5>
+            <ul>
+              <li>localStorage para dados locais</li>
+              <li>Cache de consultas CNPJ</li>
+              <li>Sem necessidade de backend</li>
+              <li>Privacidade total do usuário</li>
+            </ul>
+          </div>
+
+          <div>
+            <h5>🔌 APIs Externas</h5>
+            <ul>
+              <li>CNPJá (dados cadastrais)</li>
+              <li>ViaCEP (validação de endereços)</li>
+              <li>Geolocation API (localização)</li>
+            </ul>
+          </div>
+
+          <div>
+            <h5>☁️ Hospedagem</h5>
+            <ul>
+              <li>Vercel (gratuito)</li>
+              <li>CDN global</li>
+              <li>HTTPS por padrão</li>
+              <li>Deploy automático</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="alert alert-success mt-3">
+          <h5>🔓 Código Aberto</h5>
+          <p style="margin-bottom: 0;">O código-fonte do MetanolCheck é aberto e pode ser auditado por qualquer pessoa. Acreditamos em transparência total.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Como Contribuir -->
+    <div class="card" style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-left: 4px solid #10b981;">
+      <div class="card-header">
+        <h2><i class="fas fa-hands-helping"></i> Como Você Pode Ajudar</h2>
+      </div>
+      <div class="card-body">
+        <h4>Contribua para tornar o MetanolCheck mais eficaz:</h4>
+
+        <div class="info-grid">
+          <div class="card">
+            <h5>1. Avalie Estabelecimentos</h5>
+            <p>Compartilhe sua experiência avaliando locais que você visitou</p>
+          </div>
+
+          <div class="card">
+            <h5>2. Denuncie Suspeitas</h5>
+            <p>Registre estabelecimentos suspeitos para alertar outros usuários</p>
+          </div>
+
+          <div class="card">
+            <h5>3. Eduque Outros</h5>
+            <p>Compartilhe informações sobre os riscos do metanol</p>
+          </div>
+
+          <div class="card">
+            <h5>4. Divulgue a Ferramenta</h5>
+            <p>Ajude mais pessoas a conhecerem o MetanolCheck</p>
+          </div>
+        </div>
+
+        <div class="text-center mt-3">
+          <a href="index.html" class="btn btn-primary btn-lg">
+            <i class="fas fa-search"></i> Começar a Usar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contato e Feedback -->
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-envelope"></i> Contato e Feedback</h2>
+      </div>
+      <div class="card-body">
+        <p>Sua opinião é importante para melhorarmos continuamente:</p>
+
+        <div class="info-grid">
+          <div>
+            <h5><i class="fas fa-bug"></i> Reportar Problemas</h5>
+            <p>Encontrou um bug ou erro? Nos avise!</p>
+          </div>
+
+          <div>
+            <h5><i class="fas fa-lightbulb"></i> Sugestões</h5>
+            <p>Tem ideias para melhorar a plataforma?</p>
+          </div>
+
+          <div>
+            <h5><i class="fas fa-question-circle"></i> Dúvidas</h5>
+            <p>Precisa de ajuda para usar a ferramenta?</p>
+          </div>
+
+          <div>
+            <h5><i class="fas fa-handshake"></i> Parcerias</h5>
+            <p>Representa uma organização e quer colaborar?</p>
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-3">
+          <p style="margin: 0;">
+            <strong>Email:</strong> contato@metanolcheck.com.br<br>
+            <small>(Nota: Este é um projeto demonstrativo. Em produção, configure um email real)</small>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Créditos -->
+    <div class="card" style="background-color: var(--cinza-50);">
+      <div class="card-body text-center">
+        <h3>MetanolCheck</h3>
+        <p style="color: var(--cinza-600);">Desenvolvido para proteger vidas e conscientizar a população</p>
+        <p style="color: var(--cinza-600); font-size: 0.875rem;">
+          Utilizando: CNPJá API, ViaCEP, Font Awesome, e tecnologias web padrão<br>
+          Hospedado gratuitamente na Vercel
+        </p>
+        <p style="color: var(--cinza-600); font-size: 0.875rem; margin-top: 16px;">
+          © 2025 MetanolCheck - Todos os direitos reservados<br>
+          Projeto de utilidade pública sem fins lucrativos
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>MetanolCheck</h4>
+          <p>Plataforma de verificação de segurança de estabelecimentos para prevenção de intoxicação por metanol.</p>
+        </div>
+
+        <div class="footer-section">
+          <h4>Links Úteis</h4>
+          <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="educacao.html">Educação</a></li>
+            <li><a href="denuncia.html">Denunciar</a></li>
+            <li><a href="sobre.html">Sobre</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Contato</h4>
+          <ul>
+            <li><i class="fas fa-envelope"></i> contato@metanolcheck.com.br</li>
+            <li><i class="fas fa-shield-alt"></i> Vigilância Sanitária</li>
+            <li><i class="fas fa-balance-scale"></i> Procon</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclaimer">
+        <p><strong>Avisos Importantes:</strong></p>
+        <p>• Esta aplicação não substitui fiscalização oficial de órgãos competentes.</p>
+        <p>• Em caso de suspeita de bebida adulterada, contate imediatamente as autoridades competentes.</p>
+        <p>• As avaliações são baseadas em dados públicos e contribuições de usuários.</p>
+        <p>• Não nos responsabilizamos por decisões baseadas nestas informações.</p>
+        <p style="margin-top: 16px; text-align: center;">
+          © 2025 MetanolCheck. Desenvolvido para segurança pública.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/validacao.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
