@@ -365,7 +365,7 @@ const API = {
 
   /**
    * Verifica se o CNAE é compatível com bar/restaurante
-   * @param {string} cnae - Código CNAE
+   * @param {string|number} cnae - Código CNAE
    * @returns {boolean} - True se compatível
    */
   verificarCNAECompativel(cnae) {
@@ -389,7 +389,8 @@ const API = {
       '5620-1/04', // Fornecimento de alimentos preparados preponderantemente para consumo domiciliar
     ];
 
-    const cnaeLimpo = cnae.replace(/[^\d]/g, '');
+    // Converte para string se for número
+    const cnaeLimpo = String(cnae).replace(/[^\d]/g, '');
 
     return cnaesCompativeis.some(codigo => {
       const codigoLimpo = codigo.replace(/[^\d]/g, '');
