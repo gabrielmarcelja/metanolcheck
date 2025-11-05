@@ -458,21 +458,27 @@ const API = {
       sinaisAlerta: []
     };
 
-    // 1. Situação cadastral ativa (+30 pontos)
+    // 1. Situação cadastral ativa (+25 pontos)
     if (dadosCNPJ.situacaoAtiva) {
-      score += 30;
+      score += 25;
       detalhes.sinaisPositivos.push('Situação cadastral ativa');
     } else {
       detalhes.sinaisAlerta.push('Situação cadastral irregular');
     }
 
-    // 2. Tempo de funcionamento (+20 pontos)
+    // 2. Tempo de funcionamento (até +25 pontos) - AJUSTADO
     const anos = dadosCNPJ.tempoFuncionamento;
-    if (anos >= 3) {
+    if (anos >= 10) {
+      score += 25;
+      detalhes.sinaisPositivos.push(`Estabelecimento consolidado com ${anos} anos de funcionamento`);
+    } else if (anos >= 5) {
       score += 20;
+      detalhes.sinaisPositivos.push(`Estabelecimento experiente com ${anos} anos de funcionamento`);
+    } else if (anos >= 3) {
+      score += 15;
       detalhes.sinaisPositivos.push(`Estabelecimento com ${anos} anos de funcionamento`);
     } else if (anos >= 1) {
-      score += 10;
+      score += 8;
       detalhes.sinaisPositivos.push(`Estabelecimento com ${anos} ano(s) de funcionamento`);
     } else {
       detalhes.sinaisAlerta.push('Estabelecimento novo (menos de 1 ano)');
@@ -486,31 +492,45 @@ const API = {
       detalhes.sinaisAlerta.push('CNAE não é típico de bar/restaurante');
     }
 
-    // 4. Avaliações de usuários (até +30 pontos)
+    // 4. Capital social (até +10 pontos) - NOVO
+    const capitalSocial = dadosCNPJ.dadosOriginais.company?.equity || dadosCNPJ.dadosOriginais.capital_social || 0;
+    const capitalNumerico = typeof capitalSocial === 'string'
+      ? parseFloat(capitalSocial.replace(/[^\d,]/g, '').replace(',', '.'))
+      : capitalSocial;
+
+    if (capitalNumerico >= 1000000) {
+      score += 10;
+      detalhes.sinaisPositivos.push('Capital social elevado (empresa grande e estruturada)');
+    } else if (capitalNumerico >= 500000) {
+      score += 5;
+      detalhes.sinaisPositivos.push('Capital social médio (empresa estruturada)');
+    }
+
+    // 5. Avaliações de usuários (até +20 pontos) - REDUZIDO
     const statsReviews = Storage.calcularEstatisticasReviews(cnpj);
 
     if (statsReviews.total > 0) {
       let pontuacaoReviews = 0;
 
-      // Garrafas lacradas (10 pontos)
+      // Garrafas lacradas (7 pontos)
       if (statsReviews.percentualGarrafasLacradas >= 80) {
-        pontuacaoReviews += 10;
+        pontuacaoReviews += 7;
         detalhes.sinaisPositivos.push('Usuários confirmam bebidas lacradas');
       } else if (statsReviews.percentualGarrafasLacradas < 50) {
         detalhes.sinaisAlerta.push('Poucos usuários viram bebidas lacradas');
       }
 
-      // Nota fiscal (10 pontos)
+      // Nota fiscal (7 pontos)
       if (statsReviews.percentualNotaFiscal >= 80) {
-        pontuacaoReviews += 10;
+        pontuacaoReviews += 7;
         detalhes.sinaisPositivos.push('Usuários confirmam emissão de nota fiscal');
       } else if (statsReviews.percentualNotaFiscal < 50) {
         detalhes.sinaisAlerta.push('Poucos usuários viram nota fiscal');
       }
 
-      // Limpeza (10 pontos)
+      // Limpeza (6 pontos)
       if (statsReviews.mediaLimpeza >= 4) {
-        pontuacaoReviews += 10;
+        pontuacaoReviews += 6;
         detalhes.sinaisPositivos.push(`Boa avaliação de limpeza (${statsReviews.mediaLimpeza}/5)`);
       } else if (statsReviews.mediaLimpeza < 3) {
         detalhes.sinaisAlerta.push(`Baixa avaliação de limpeza (${statsReviews.mediaLimpeza}/5)`);
@@ -519,7 +539,8 @@ const API = {
       score += pontuacaoReviews;
       detalhes.sinaisPositivos.push(`${statsReviews.total} avaliação(ões) de usuários`);
     } else {
-      detalhes.sinaisAlerta.push('Sem avaliações de usuários ainda');
+      // Sem avaliações não gera mais alerta crítico
+      detalhes.sinaisPositivos.push('Aguardando primeiras avaliações de usuários');
     }
 
     // 5. Denúncias (penalização)

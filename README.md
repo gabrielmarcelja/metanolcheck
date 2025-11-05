@@ -277,20 +277,36 @@ const dados = await response.json();
 - Retorna dados de endereço
 - CORS habilitado
 
-## 📊 Metodologia de Cálculo do Score
+## 📊 Metodologia de Cálculo do Score (v1.2.0)
 
-O score de confiança (0-100) é calculado com base em:
+O score de confiança (0-100) é calculado com base em múltiplos critérios:
+
+### Dados Oficiais (Até 80 pontos)
 
 | Critério | Pontos |
 |----------|--------|
-| **Situação Cadastral Ativa** | +30 |
-| **Tempo de Funcionamento ≥3 anos** | +20 |
-| **Tempo de Funcionamento 1-3 anos** | +10 |
+| **Situação Cadastral Ativa** | +25 |
+| **Tempo de Funcionamento ≥10 anos** | +25 |
+| **Tempo de Funcionamento 5-9 anos** | +20 |
+| **Tempo de Funcionamento 3-4 anos** | +15 |
+| **Tempo de Funcionamento 1-2 anos** | +8 |
 | **CNAE Compatível com Alimentação** | +20 |
-| **Avaliações: Garrafas Lacradas ≥80%** | +10 |
-| **Avaliações: Nota Fiscal ≥80%** | +10 |
-| **Avaliações: Limpeza ≥4/5** | +10 |
-| **Cada Denúncia Registrada** | -15 |
+| **Capital Social ≥R$1 milhão** | +10 |
+| **Capital Social ≥R$500 mil** | +5 |
+
+### Avaliações de Usuários (Até 20 pontos)
+
+| Critério | Pontos |
+|----------|--------|
+| **Garrafas Lacradas ≥80% nas avaliações** | +7 |
+| **Nota Fiscal ≥80% nas avaliações** | +7 |
+| **Limpeza média ≥4/5 nas avaliações** | +6 |
+
+### Penalizações
+
+| Critério | Pontos |
+|----------|--------|
+| **Cada Denúncia Registrada** | -15 (máximo -45) |
 
 ### Classificação
 
@@ -298,9 +314,16 @@ O score de confiança (0-100) é calculado com base em:
 - **50-79:** 🟡 Atenção Recomendada
 - **0-49:** 🔴 Risco Alto - Evite
 
+### Notas Importantes
+
+- Estabelecimentos grandes e tradicionais podem atingir **até 80 pontos** apenas com dados oficiais
+- Avaliações de usuários são um **complemento**, não o fator principal
+- A falta de avaliações **não prejudica** estabelecimentos bem estabelecidos
+- Denúncias têm alto impacto negativo devido à gravidade do tema
+
 ### Transparência
 
-Toda a lógica de cálculo está disponível em `js/api.js` na função `calcularScore()`.
+Toda a lógica de cálculo está disponível em [js/api.js](js/api.js) na função `calcularScore()`.
 
 ## ⚠️ Limitações
 
